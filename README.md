@@ -44,3 +44,14 @@ python -m unittest discover -s tests -v
 - Recommendations are simulated and require human approval where indicated.
 - Investigation cost is expressed in illustrative relative units.
 - No real containment, endpoint isolation, or network action is performed.
+
+## Strands Decider 2B
+
+SentinelOps AI uses a locally hosted Strands Decider 2B model to support evidence-driven investigation decisions. The model runs on CPU at port 8099. Start the Decider server separately before running Decider-integrated workflows.
+
+## Safety
+
+- Uses synthetic security events only.
+- Low-confidence decisions are routed for human review.
+- No real containment or security-system changes are executed.
+- Incident briefs are generated locally without paid APIs.
