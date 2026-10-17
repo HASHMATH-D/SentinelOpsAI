@@ -1,0 +1,116 @@
+{
+  "indicators": {
+    "198.51.100.77": {
+      "reputation": "malicious",
+      "reason": "Synthetic test indicator for the simulated incident"
+    },
+    "203.0.113.25": {
+      "reputation": "suspicious",
+      "reason": "Synthetic test indicator requiring further review"
+    },
+    "192.0.2.10": {
+      "reputation": "benign",
+      "reason": "Synthetic known-good test indicator"
+    }
+  },
+  "scenarios": {
+    "suspicious_login_chain": [
+      {
+        "event_id": "E001",
+        "timestamp": "2026-10-15T08:00:00Z",
+        "event_type": "authentication",
+        "user": "alex",
+        "device_id": "LAP-101",
+        "source_ip": "198.51.100.77",
+        "result": "failure"
+      },
+      {
+        "event_id": "E002",
+        "timestamp": "2026-10-15T08:01:00Z",
+        "event_type": "authentication",
+        "user": "alex",
+        "device_id": "LAP-101",
+        "source_ip": "198.51.100.77",
+        "result": "failure"
+      },
+      {
+        "event_id": "E003",
+        "timestamp": "2026-10-15T08:02:00Z",
+        "event_type": "authentication",
+        "user": "alex",
+        "device_id": "LAP-101",
+        "source_ip": "198.51.100.77",
+        "result": "failure"
+      },
+      {
+        "event_id": "E004",
+        "timestamp": "2026-10-15T08:04:00Z",
+        "event_type": "authentication",
+        "user": "alex",
+        "device_id": "LAP-101",
+        "source_ip": "198.51.100.77",
+        "result": "success"
+      },
+      {
+        "event_id": "E005",
+        "timestamp": "2026-10-15T08:07:00Z",
+        "event_type": "file_access",
+        "user": "alex",
+        "device_id": "LAP-101",
+        "source_ip": "198.51.100.77",
+        "file": "finance/payroll.csv",
+        "sensitive": true
+      },
+      {
+        "event_id": "E006",
+        "timestamp": "2026-10-15T08:10:00Z",
+        "event_type": "network",
+        "user": "alex",
+        "device_id": "LAP-101",
+        "source_ip": "198.51.100.77",
+        "bytes_transferred": 2500000,
+        "direction": "outbound"
+      }
+    ],
+    "benign_login": [
+      {
+        "event_id": "B001",
+        "timestamp": "2026-10-15T09:00:00Z",
+        "event_type": "authentication",
+        "user": "sam",
+        "device_id": "LAP-202",
+        "source_ip": "192.0.2.10",
+        "result": "success"
+      },
+      {
+        "event_id": "B002",
+        "timestamp": "2026-10-15T09:03:00Z",
+        "event_type": "endpoint",
+        "user": "sam",
+        "device_id": "LAP-202",
+        "source_ip": "192.0.2.10",
+        "activity": "approved_software_started"
+      }
+    ],
+    "uncertain_activity": [
+      {
+        "event_id": "U001",
+        "timestamp": "2026-10-15T10:00:00Z",
+        "event_type": "authentication",
+        "user": "jordan",
+        "device_id": "LAP-303",
+        "source_ip": "203.0.113.25",
+        "result": "failure"
+      },
+      {
+        "event_id": "U002",
+        "timestamp": "2026-10-15T10:05:00Z",
+        "event_type": "endpoint",
+        "user": "jordan",
+        "device_id": "LAP-303",
+        "source_ip": "203.0.113.25",
+        "activity": "unusual_process"
+      }
+    ]
+  }
+}

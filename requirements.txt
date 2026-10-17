@@ -1,0 +1,2 @@
+# Baseline engine uses Python standard library only.
+# Future optional integrations will be listed here after verification.

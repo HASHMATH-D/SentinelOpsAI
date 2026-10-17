@@ -1,0 +1,217 @@
+{
+  "name": "SentinelOpsAI Extended Synthetic Benchmark",
+  "version": 1,
+  "synthetic_only": true,
+  "label_status": "provisional_expected_actions",
+  "scenarios": [
+    {
+      "scenario_id": "repeated_auth_failures",
+      "expected_first_action": "inspect_authentication",
+      "expected_review": true,
+      "events": [
+        {
+          "event_id": "X001",
+          "event_type": "auth_failure",
+          "source_ip": "198.51.100.77",
+          "user": "alex",
+          "device_id": "LAP-101",
+          "timestamp": "2026-10-15T10:00:00Z"
+        },
+        {
+          "event_id": "X002",
+          "event_type": "auth_failure",
+          "source_ip": "198.51.100.77",
+          "user": "alex",
+          "device_id": "LAP-101",
+          "timestamp": "2026-10-15T10:00:00Z"
+        },
+        {
+          "event_id": "X003",
+          "event_type": "auth_failure",
+          "source_ip": "198.51.100.77",
+          "user": "alex",
+          "device_id": "LAP-101",
+          "timestamp": "2026-10-15T10:00:00Z"
+        }
+      ]
+    },
+    {
+      "scenario_id": "sensitive_file_access",
+      "expected_first_action": "inspect_endpoint",
+      "expected_review": true,
+      "events": [
+        {
+          "event_id": "X004",
+          "event_type": "file_access",
+          "source_ip": "203.0.113.25",
+          "user": "jordan",
+          "device_id": "LAP-303",
+          "timestamp": "2026-10-15T10:00:00Z",
+          "file_path": "finance/payroll.csv",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "scenario_id": "large_outbound_transfer",
+      "expected_first_action": "analyze_network",
+      "expected_review": true,
+      "events": [
+        {
+          "event_id": "X005",
+          "event_type": "network_transfer",
+          "source_ip": "198.51.100.77",
+          "user": "alex",
+          "device_id": "LAP-101",
+          "timestamp": "2026-10-15T10:00:00Z",
+          "bytes_sent": 2500000,
+          "direction": "outbound"
+        }
+      ]
+    },
+    {
+      "scenario_id": "known_benign_source",
+      "expected_first_action": "check_reputation",
+      "expected_review": false,
+      "events": [
+        {
+          "event_id": "X006",
+          "event_type": "auth_success",
+          "source_ip": "192.0.2.10",
+          "user": "sam",
+          "device_id": "LAP-202",
+          "timestamp": "2026-10-15T10:00:00Z"
+        }
+      ]
+    },
+    {
+      "scenario_id": "mixed_login_and_transfer",
+      "expected_first_action": "correlate_events",
+      "expected_review": true,
+      "events": [
+        {
+          "event_id": "X007",
+          "event_type": "auth_failure",
+          "source_ip": "198.51.100.77",
+          "user": "alex",
+          "device_id": "LAP-101",
+          "timestamp": "2026-10-15T10:00:00Z"
+        },
+        {
+          "event_id": "X008",
+          "event_type": "auth_success",
+          "source_ip": "198.51.100.77",
+          "user": "alex",
+          "device_id": "LAP-101",
+          "timestamp": "2026-10-15T10:00:00Z"
+        },
+        {
+          "event_id": "X009",
+          "event_type": "network_transfer",
+          "source_ip": "198.51.100.77",
+          "user": "alex",
+          "device_id": "LAP-101",
+          "timestamp": "2026-10-15T10:00:00Z",
+          "bytes_sent": 2500000,
+          "direction": "outbound"
+        }
+      ]
+    },
+    {
+      "scenario_id": "unusual_endpoint_process",
+      "expected_first_action": "inspect_endpoint",
+      "expected_review": true,
+      "events": [
+        {
+          "event_id": "X010",
+          "event_type": "unusual_process",
+          "source_ip": "203.0.113.25",
+          "user": "jordan",
+          "device_id": "LAP-303",
+          "timestamp": "2026-10-15T10:00:00Z",
+          "process_name": "unknown_process"
+        }
+      ]
+    },
+    {
+      "scenario_id": "routine_approved_activity",
+      "expected_first_action": "inspect_authentication",
+      "expected_review": false,
+      "events": [
+        {
+          "event_id": "X011",
+          "event_type": "auth_success",
+          "source_ip": "192.0.2.10",
+          "user": "sam",
+          "device_id": "LAP-202",
+          "timestamp": "2026-10-15T10:00:00Z"
+        },
+        {
+          "event_id": "X012",
+          "event_type": "approved_software",
+          "source_ip": "192.0.2.10",
+          "user": "sam",
+          "device_id": "LAP-202",
+          "timestamp": "2026-10-15T10:00:00Z"
+        }
+      ]
+    },
+    {
+      "scenario_id": "ambiguous_single_failure",
+      "expected_first_action": "inspect_authentication",
+      "expected_review": true,
+      "events": [
+        {
+          "event_id": "X013",
+          "event_type": "auth_failure",
+          "source_ip": "203.0.113.25",
+          "user": "jordan",
+          "device_id": "LAP-303",
+          "timestamp": "2026-10-15T10:00:00Z"
+        }
+      ]
+    },
+    {
+      "scenario_id": "file_access_and_outbound_transfer",
+      "expected_first_action": "inspect_endpoint",
+      "expected_review": true,
+      "events": [
+        {
+          "event_id": "X014",
+          "event_type": "file_access",
+          "source_ip": "198.51.100.77",
+          "user": "alex",
+          "device_id": "LAP-101",
+          "timestamp": "2026-10-15T10:00:00Z",
+          "file_path": "finance/payroll.csv",
+          "sensitive": true
+        },
+        {
+          "event_id": "X015",
+          "event_type": "network_transfer",
+          "source_ip": "198.51.100.77",
+          "user": "alex",
+          "device_id": "LAP-101",
+          "timestamp": "2026-10-15T10:00:00Z",
+          "bytes_sent": 2500000,
+          "direction": "outbound"
+        }
+      ]
+    },
+    {
+      "scenario_id": "benign_source_with_failure",
+      "expected_first_action": "inspect_authentication",
+      "expected_review": true,
+      "events": [
+        {
+          "event_id": "X016",
+          "event_type": "auth_failure",
+          "source_ip": "192.0.2.10",
+          "user": "sam",
+          "device_id": "LAP-202",
+          "timestamp": "2026-10-15T10:00:00Z"
+        }
+      ]
+    }
+  ]
+}

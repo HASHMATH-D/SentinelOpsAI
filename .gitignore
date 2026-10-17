@@ -1,0 +1,14 @@
+.venv/
+.venv-decider/
+__pycache__/
+*.py[cod]
+.env
+.env.*
+!.env.example
+.pytest_cache/
+reports/
+.DS_Store
+
+# Local backup files
+*.backup
+*.pre_*

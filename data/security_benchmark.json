@@ -1,0 +1,125 @@
+{
+  "name": "SentinelOpsAI Synthetic Security Benchmark",
+  "version": 1,
+  "source": "data/security_events.json",
+  "synthetic_only": true,
+  "scenarios": [
+    {
+      "scenario_id": "suspicious_login_chain",
+      "events": [
+        {
+          "event_id": "E001",
+          "timestamp": "2026-10-15T08:00:00Z",
+          "event_type": "authentication",
+          "user": "alex",
+          "device_id": "LAP-101",
+          "source_ip": "198.51.100.77",
+          "result": "failure"
+        },
+        {
+          "event_id": "E002",
+          "timestamp": "2026-10-15T08:01:00Z",
+          "event_type": "authentication",
+          "user": "alex",
+          "device_id": "LAP-101",
+          "source_ip": "198.51.100.77",
+          "result": "failure"
+        },
+        {
+          "event_id": "E003",
+          "timestamp": "2026-10-15T08:02:00Z",
+          "event_type": "authentication",
+          "user": "alex",
+          "device_id": "LAP-101",
+          "source_ip": "198.51.100.77",
+          "result": "failure"
+        },
+        {
+          "event_id": "E004",
+          "timestamp": "2026-10-15T08:04:00Z",
+          "event_type": "authentication",
+          "user": "alex",
+          "device_id": "LAP-101",
+          "source_ip": "198.51.100.77",
+          "result": "success"
+        },
+        {
+          "event_id": "E005",
+          "timestamp": "2026-10-15T08:07:00Z",
+          "event_type": "file_access",
+          "user": "alex",
+          "device_id": "LAP-101",
+          "source_ip": "198.51.100.77",
+          "file": "finance/payroll.csv",
+          "sensitive": true
+        },
+        {
+          "event_id": "E006",
+          "timestamp": "2026-10-15T08:10:00Z",
+          "event_type": "network",
+          "user": "alex",
+          "device_id": "LAP-101",
+          "source_ip": "198.51.100.77",
+          "bytes_transferred": 2500000,
+          "direction": "outbound"
+        }
+      ],
+      "expected_first_action": "inspect_authentication",
+      "expected_review": true,
+      "reason": "Repeated failures followed by a successful login are the primary initial signal."
+    },
+    {
+      "scenario_id": "benign_login",
+      "events": [
+        {
+          "event_id": "B001",
+          "timestamp": "2026-10-15T09:00:00Z",
+          "event_type": "authentication",
+          "user": "sam",
+          "device_id": "LAP-202",
+          "source_ip": "192.0.2.10",
+          "result": "success"
+        },
+        {
+          "event_id": "B002",
+          "timestamp": "2026-10-15T09:03:00Z",
+          "event_type": "endpoint",
+          "user": "sam",
+          "device_id": "LAP-202",
+          "source_ip": "192.0.2.10",
+          "activity": "approved_software_started"
+        }
+      ],
+      "expected_first_action": "check_reputation",
+      "expected_review": false,
+      "reason": "The scenario uses a source IP marked benign in the synthetic indicator dataset."
+    },
+    {
+      "scenario_id": "uncertain_activity",
+      "events": [
+        {
+          "event_id": "U001",
+          "timestamp": "2026-10-15T10:00:00Z",
+          "event_type": "authentication",
+          "user": "jordan",
+          "device_id": "LAP-303",
+          "source_ip": "203.0.113.25",
+          "result": "failure"
+        },
+        {
+          "event_id": "U002",
+          "timestamp": "2026-10-15T10:05:00Z",
+          "event_type": "endpoint",
+          "user": "jordan",
+          "device_id": "LAP-303",
+          "source_ip": "203.0.113.25",
+          "activity": "unusual_process"
+        }
+      ],
+      "expected_first_action": "inspect_endpoint",
+      "expected_review": true,
+      "reason": "The unusual process needs endpoint investigation; the failed login also warrants caution."
+    }
+  ],
+  "labeling_note": "Initial expected-action labels based on the dominant scenario signal. Review labels are evaluation targets, not proof of model safety."
+}
