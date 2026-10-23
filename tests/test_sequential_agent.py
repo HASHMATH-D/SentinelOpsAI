@@ -12,7 +12,14 @@ with (ROOT / "data" / "security_events.json").open() as file:
 
 
 def decision(action, confidence=0.99):
-    review = confidence < 0.90 or action == "request_human_review"
+    safe_actions = {
+        "inspect_authentication", "inspect_endpoint", "analyze_network",
+        "check_reputation", "correlate_events", "estimate_severity",
+        "finish_investigation",
+    }
+    review = action == "request_human_review" or (
+        confidence < 0.90 and action not in safe_actions
+    )
     return {
         "model": "mock-decider-for-test",
         "model_action": action,
@@ -56,24 +63,18 @@ class SequentialAgentTests(unittest.TestCase):
         )
         self.assertFalse(report["containment_performed"])
 
-    def test_low_confidence_stops_before_tool_execution(self):
+    def test_low_confidence_read_only_action_can_execute(self):
         agent = SequentialInvestigator(
             self.events,
             self.indicators,
+            max_steps=1,
             decider=lambda state: decision("check_reputation", 0.30),
         )
         report = agent.investigate(source_ip="198.51.100.77")
 
-        self.assertEqual(report["status"], "human_review_required")
-        self.assertEqual(report["steps_taken"], 0)
-        self.assertTrue(report["requires_human_review"])
-        self.assertEqual(
-            report["decision"]["model_action"], "check_reputation"
-        )
-        self.assertEqual(report["decision"]["model_confidence"], 0.30)
-        self.assertFalse(report["decision"]["tool_executed"])
-        self.assertFalse(report["decision"]["containment_performed"])
-        self.assertIn("review_reason", report["decision"])
+        self.assertEqual(report["steps_taken"], 1)
+        self.assertIn("check_reputation", report["completed_actions"])
+        self.assertFalse(report["containment_performed"])
 
     def test_repeated_action_stops_for_review(self):
         choices = iter([
@@ -161,6 +162,28 @@ class SequentialAgentTests(unittest.TestCase):
             item["action"] for item in second_advice["ranked_actions"]
         }
         self.assertNotIn("inspect_authentication", remaining)
+
+
+    def test_all_six_tools_execute_without_containment(self):
+        actions = [
+            "inspect_authentication",
+            "inspect_endpoint",
+            "analyze_network",
+            "check_reputation",
+            "correlate_events",
+            "estimate_severity",
+        ]
+        choices = iter([decision(action, 0.30) for action in actions])
+        agent = SequentialInvestigator(
+            self.events, self.indicators, max_steps=6,
+            decider=lambda state: next(choices),
+        )
+        report = agent.investigate(source_ip="198.51.100.77")
+
+        self.assertEqual(report["steps_taken"], 6)
+        self.assertEqual(len(report["completed_actions"]), 6)
+        self.assertTrue(report["requires_human_review"])
+        self.assertFalse(report["containment_performed"])
 
 
 if __name__ == "__main__":

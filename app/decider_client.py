@@ -89,9 +89,22 @@ def choose_next_action(state: str, timeout: int = 120) -> dict:
     ):
         raise RuntimeError(f"Invalid Decider confidence: {confidence!r}")
 
+    # Risk-based policy: low-risk evidence gathering may proceed
+    # without approval. Sensitive actions remain human-reviewed.
+    safe_investigation_actions = {
+        "inspect_authentication",
+        "inspect_endpoint",
+        "analyze_network",
+        "check_reputation",
+        "correlate_events",
+        "estimate_severity",
+        "finish_investigation",
+    }
+
+    is_safe_investigation = action in safe_investigation_actions
     requires_review = (
-        confidence < CONFIDENCE_THRESHOLD
-        or action == "request_human_review"
+        action == "request_human_review"
+        or (confidence < CONFIDENCE_THRESHOLD and not is_safe_investigation)
     )
 
     return {

@@ -144,9 +144,7 @@ if page == "Overview":
         summary["scenario"] = summary["scenario"].str.replace(
             "_", " ", regex=False
         ).str.title()
-        summary["confidence"] = summary["confidence"].map(
-            lambda x: f"{x:.1%}" if pd.notna(x) else "N/A"
-        )
+        summary["model_confidence"] = summary["model_confidence"].map(lambda x: f"{x:.1%}" if pd.notna(x) else "N/A")
         summary.columns = [
             "Scenario", "Severity", "Score", "Investigation Status",
             "Confidence", "Human Review",
@@ -491,14 +489,12 @@ elif page == "Evaluation & Safety":
     fig = px.bar(
         confidence_df,
         x="display_name",
-        y="confidence",
+        y="model_confidence",
         labels={
             "display_name": "Scenario",
             "confidence": "Decider confidence",
         },
-        text=confidence_df["model_confidence"].map(
-            lambda x: f"{x:.1%}" if pd.notna(x) else "N/A"
-        ),
+        text=confidence_df["model_confidence"].map(lambda x: f"{x:.1%}"),
         title="Model confidence vs review threshold",
     )
     fig.add_hline(
@@ -533,9 +529,7 @@ elif page == "Evaluation & Safety":
         review_df["scenario"] = review_df["scenario"].str.replace(
             "_", " ", regex=False
         ).str.title()
-        review_df["model_confidence"] = review_df["model_confidence"].map(
-            lambda x: f"{x:.1%}" if pd.notna(x) else "N/A"
-        )
+        review_df["model_confidence"] = review_df["model_confidence"].map(lambda x: f"{x:.1%}" if pd.notna(x) else "N/A")
         st.dataframe(review_df, hide_index=True, use_container_width=True)
     else:
         st.info("No scenarios are currently flagged for review.")
